@@ -41,9 +41,7 @@ class UIPainter extends CustomPainter {
 
     path.moveTo(size.width * 0.4, size.height * 0.65);
     path.lineTo(size.width * 0.4, size.height * 0.75);
-    path.conicTo(x1, y1, x2, y2, w)
     path.close();
-    
 
     canvas.drawPath(path, paint);
   }

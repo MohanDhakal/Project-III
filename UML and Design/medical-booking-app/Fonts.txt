@@ -1,0 +1,9 @@
+Fonts used in this design:
+
+Font: Asap
+Author: Omnibus Type
+Url: http://www.fontsquirrel.com/fonts/asap
+
+Font: Montserrat
+Author: Julieta Ulanovsky
+Url: http://www.fontsquirrel.com/fonts/montserrat
