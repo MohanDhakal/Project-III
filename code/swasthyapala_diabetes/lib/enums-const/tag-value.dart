@@ -1,0 +1,1 @@
+enum TagValue { tag, value }

@@ -31,6 +31,16 @@ dependencies:
   flutter_svg: ^0.21.0+1
   simple_coverflow: ^0.0.8
   animated_text_kit: ^4.1.1
+  spinner: ^1.0.1
+  pie_chart: 5.0.0
+  fl_chart: ^0.35.0
+  permission_handler: ^7.1.0
+#   contacts_service: ^0.3.10
+  fluttercontactpicker: ^4.4.0
+  sqflite: ^2.0.0+3
+  path: ^1.8.0
+
+
 
 dev_dependencies:
   flutter_test:

@@ -1,0 +1,2 @@
+
+1.state management using provider for contact management on deletion and new addition on list

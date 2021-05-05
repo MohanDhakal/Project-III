@@ -11,9 +11,9 @@ Color getColor(Set<MaterialState> states) {
     MaterialState.focused,
   };
   if (states.any(interactiveStates.contains)) {
-    return color2;
+    return color4;
   }
-  return color4;
+  return color1;
 }
 
 double getElevation(Set<MaterialState> states) {

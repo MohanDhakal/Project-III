@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:simple_coverflow/simple_coverflow.dart';
 import 'package:swasthyapala_diabetes/enums-const/colors.dart';
 import 'package:swasthyapala_diabetes/enums-const/sizes.dart';
-import '../widgets/bg_widget.dart';
-import '../widgets/meal_widget.dart';
+import '../widgets/home/bg_widget.dart';
+import '../widgets/home/meal_widget.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 class HomeUI extends StatelessWidget {
