@@ -1,35 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:swasthyapala_diabetes/enums-const/colors.dart';
-import 'package:swasthyapala_diabetes/enums-const/sizes.dart';
-import 'package:swasthyapala_diabetes/utility/shadow.dart';
+import 'package:swasthyapala_diabetes/enums-const/gender.dart';
+import 'package:swasthyapala_diabetes/enums-const/selection_status.dart';
+import 'package:swasthyapala_diabetes/states/ActivitySelection.dart';
+import 'package:swasthyapala_diabetes/states/SexSelection.dart';
+import 'package:swasthyapala_diabetes/utility/enum_to_string.dart';
 
-class CustomSelectionBtn extends StatefulWidget {
+class CustomSelectionBtn extends StatelessWidget {
+  final shadow;
   final placeholder;
-  CustomSelectionBtn({this.placeholder});
-  @override
-  _CustomSelectionBtnState createState() => _CustomSelectionBtnState();
-}
+  final title;
+  CustomSelectionBtn({this.placeholder, this.shadow, this.title});
 
-class _CustomSelectionBtnState extends State<CustomSelectionBtn> {
-  var shadow;
-  int pressCounter = 0;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        setState(() {
-          if ((pressCounter++) % 2 == 0)
-            shadow = showInnerShadow();
-          else
-            shadow = null;
-        });
+        if (title == Activity) {
+          Provider.of<ActivityBloc>(context, listen: false).activity =
+              this.placeholder;
+        } else if (title == Gender) {
+          Provider.of<GenderBloc>(context, listen: false).gender =
+              this.placeholder;
+        }
       },
       child: Container(
         height: 30,
         child: Center(
             child: Padding(
           padding: const EdgeInsets.all(2.0),
-          child: Text(widget.placeholder),
+          child: Text(getTextFromEnum(title, placeholder)),
         )),
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black12),

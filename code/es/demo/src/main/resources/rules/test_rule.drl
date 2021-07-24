@@ -1,0 +1,17 @@
+package rules
+import com.swasthyapala.demo.Test
+
+rule "sla for ui"
+
+	when 
+		testObject: Test(type=="ui")
+	then 
+		testObject.setSla("15");
+	end
+	
+rule "sla for be"
+	when 
+		testObject:Test(type=="be")
+	then 
+		testObject.setSla("30");
+	end

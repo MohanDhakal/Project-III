@@ -56,8 +56,8 @@ class UserForm extends StatelessWidget {
 
 class SaveUserButton extends StatelessWidget {
   const SaveUserButton({
-    Key key,
-    @required this.size,
+    Key? key,
+    required this.size,
   }) : super(key: key);
 
   final Size size;
@@ -90,7 +90,7 @@ class SaveUserButton extends StatelessWidget {
 
 class UserNameField extends StatelessWidget {
   const UserNameField({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -112,7 +112,7 @@ class UserNameField extends StatelessWidget {
         hintStyle: TextStyle(fontSize: 15, color: Colors.black12),
       ),
       validator: (value) {
-        if (value.length < 6) {
+        if (value!.length < 6) {
           return "invalid format";
         } else
           return null;
@@ -123,7 +123,7 @@ class UserNameField extends StatelessWidget {
 
 class PhoneNumberField extends StatelessWidget {
   const PhoneNumberField({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -144,6 +144,7 @@ class PhoneNumberField extends StatelessWidget {
         hintStyle: TextStyle(fontSize: 15, color: Colors.black12),
       ),
       validator: (value) {
+        return null;
         //   if (Validator.validatePhone((myPhoneController.text ?? "12")) ==
         //       false) {
         //     return "typed number is incorrect";

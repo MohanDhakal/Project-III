@@ -11,9 +11,14 @@ class IngredientDetail extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(
-          Icons.arrow_back_ios,
-          color: normal_txt_color_black,
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.arrow_back_ios,
+            color: normal_txt_color_black,
+          ),
         ),
         title: Text(
           'Ingredients',
@@ -67,9 +72,14 @@ class NutritionDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(
-          Icons.arrow_back_ios,
-          color: normal_txt_color_black,
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.arrow_back_ios,
+            color: normal_txt_color_black,
+          ),
         ),
         title: Text(
           'Ingredients',

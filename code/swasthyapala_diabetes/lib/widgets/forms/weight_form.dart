@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:swasthyapala_diabetes/enums-const/sizes.dart';
+import 'package:swasthyapala_diabetes/states/user_detail_bloc.dart';
 
-class WeightForm extends StatelessWidget {
+class WeightForm extends StatefulWidget {
+  @override
+  _WeightFormState createState() => _WeightFormState();
+}
+
+class _WeightFormState extends State<WeightForm> {
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -23,6 +30,12 @@ class WeightForm extends StatelessWidget {
                   height: 50,
                   child: TextFormField(
                     keyboardType: TextInputType.number,
+                    onChanged: (text) {
+                      if (text != '') {
+                        Provider.of<UserDetailBloc>(context, listen: false)
+                            .weight = double.parse(text);
+                      }
+                    },
                     decoration: InputDecoration(
                       hintText: '12.9',
                       floatingLabelBehavior: FloatingLabelBehavior.never,

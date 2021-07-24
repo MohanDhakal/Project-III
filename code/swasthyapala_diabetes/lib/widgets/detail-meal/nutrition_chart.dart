@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
-import 'package:swasthyapala_diabetes/enums-const/colors.dart';
 import 'package:swasthyapala_diabetes/screens/meal_explore.dart';
 
 Map<String, double> dataMap = {
@@ -14,14 +13,19 @@ class NutritonInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
-    return Container(
-      child: Stack(
-        children: [
-          Positioned(
-              top: size.height * 0.15,
-              child: TitleHorizontalLine(titleText: "Breakfast")),
-          PieChart(dataMap: dataMap)
-        ],
+    return Material(
+      child: Container(
+        child: Stack(
+          children: [
+            Positioned(
+                top: size.height * 0.15,
+                child: TitleHorizontalLine(titleText: "Breakfast")),
+            PieChart(
+              dataMap: dataMap,
+              centerText: 'Nutrition',
+            )
+          ],
+        ),
       ),
     );
   }

@@ -1,9 +1,5 @@
-import 'dart:math';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:swasthyapala_diabetes/enums-const/colors.dart';
-import 'package:swasthyapala_diabetes/enums-const/sizes.dart';
 
 class BarChartSample3 extends StatefulWidget {
   @override

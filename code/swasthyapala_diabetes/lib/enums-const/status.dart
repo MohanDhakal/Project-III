@@ -1,1 +1,1 @@
-enum Status { active, inactive }
+enum Status { active, inactive, processing }

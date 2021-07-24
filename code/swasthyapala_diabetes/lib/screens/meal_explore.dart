@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:swasthyapala_diabetes/enums-const/colors.dart';
 import 'package:swasthyapala_diabetes/enums-const/sizes.dart';
+import 'package:swasthyapala_diabetes/screens/detail_screen.dart';
 
 class MealDetail extends StatelessWidget {
   @override
@@ -10,9 +11,14 @@ class MealDetail extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
-          leading: Icon(
-            Icons.arrow_back,
-            color: normal_txt_color_black,
+          leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back,
+              color: normal_txt_color_black,
+            ),
           ),
           title: Text(
             'Breakfast',
@@ -74,8 +80,17 @@ class MealDetail extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                ExploreMealDetailBtn(
-                    text: 'Nutrition', imagePath: 'asset/images/boul.png'),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NutritionDetail()),
+                    );
+                  },
+                  child: ExploreMealDetailBtn(
+                      text: 'Nutrition', imagePath: 'asset/images/boul.png'),
+                ),
                 ExploreMealDetailBtn(
                     text: 'Cooking Procedure',
                     imagePath: 'asset/images/boul.png'),
@@ -84,8 +99,16 @@ class MealDetail extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                ExploreMealDetailBtn(
-                    text: 'Ingredients', imagePath: 'asset/images/boul.png'),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => IngredientDetail()));
+                  },
+                  child: ExploreMealDetailBtn(
+                      text: 'Ingredients', imagePath: 'asset/images/boul.png'),
+                ),
                 ExploreMealDetailBtn(
                     text: 'Cooking Procedure',
                     imagePath: 'asset/images/boul.png'),
@@ -98,7 +121,7 @@ class MealDetail extends StatelessWidget {
 
 class ExploreMealDetailBtn extends StatelessWidget {
   final text, imagePath;
-  const ExploreMealDetailBtn({Key key, this.text, this.imagePath})
+  const ExploreMealDetailBtn({Key? key, this.text, this.imagePath})
       : super(key: key);
 
   @override
@@ -132,7 +155,7 @@ class ExploreMealDetailBtn extends StatelessWidget {
 class TitleHorizontalLine extends StatelessWidget {
   final titleText;
   const TitleHorizontalLine({
-    Key key,
+    Key? key,
     @required this.titleText,
   }) : super(key: key);
 

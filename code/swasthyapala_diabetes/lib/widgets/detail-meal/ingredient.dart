@@ -7,7 +7,8 @@ class IngredientInfo extends StatelessWidget {
   final qty;
   final unit;
   final TagValue tv;
-  IngredientInfo({@required this.name, @required this.qty, this.unit, this.tv});
+  IngredientInfo(
+      {@required this.name, @required this.qty, this.unit, required this.tv});
   @override
   Widget build(BuildContext context) {
     return Padding(
