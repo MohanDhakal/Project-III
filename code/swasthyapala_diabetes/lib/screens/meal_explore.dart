@@ -1,11 +1,15 @@
 // import 'dart:html';
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:swasthyapala_diabetes/enums-const/colors.dart';
 import 'package:swasthyapala_diabetes/enums-const/sizes.dart';
 import 'package:swasthyapala_diabetes/screens/detail_screen.dart';
 
 class MealDetail extends StatelessWidget {
+  final meal;
+  MealDetail({this.meal});
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -59,10 +63,10 @@ class MealDetail extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(top: 20.0),
                                 child: Text(
-                                  'Vegetable\nCurry',
+                                  meal['name'],
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      fontSize: big_text_size,
+                                      fontSize: medium_text_size,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
@@ -82,10 +86,11 @@ class MealDetail extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
+                    // print(meal['protein']);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => NutritionDetail()),
+                          builder: (context) => NutritionDetail(meal)),
                     );
                   },
                   child: ExploreMealDetailBtn(
@@ -101,10 +106,11 @@ class MealDetail extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
+                    var value = jsonDecode(meal['ingredients']);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => IngredientDetail()));
+                            builder: (context) => IngredientDetail(value)));
                   },
                   child: ExploreMealDetailBtn(
                       text: 'Ingredients', imagePath: 'asset/images/boul.png'),

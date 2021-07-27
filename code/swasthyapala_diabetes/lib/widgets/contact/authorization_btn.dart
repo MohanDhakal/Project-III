@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:swasthyapala_diabetes/enums-const/colors.dart';
 import 'package:swasthyapala_diabetes/models/contact_pref.dart';
 import 'package:swasthyapala_diabetes/services/db_storage/contact_preference.dart';
+import 'package:swasthyapala_diabetes/services/sms/sms_service.dart';
 
 class ContactAuthorizationBtn extends StatefulWidget {
   final text, phone;
@@ -21,7 +22,7 @@ class _ContactAuthorizationBtnState extends State<ContactAuthorizationBtn> {
   void initState() {
     super.initState();
     getPreferences(widget.phone).then((value) {
-      if(value.length>0){
+      if (value.length > 0) {
         setState(() {
           cpf = ContactPref().fromJson(value.elementAt(0));
         });
@@ -49,10 +50,12 @@ class _ContactAuthorizationBtnState extends State<ContactAuthorizationBtn> {
       ),
     );
   }
-  void handleTap(){
+
+  void handleTap() {
     if (widget.text == 'Send Meal Info') {
       if (cpf.mealPref == 0) {
         updateMealInfo(1, widget.phone);
+        sendSmsToUser();
         setState(() {
           cpf.mealPref = 1;
         });

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:swasthyapala_diabetes/enums-const/selection_status.dart';
 
 class ActivityBloc with ChangeNotifier {
-  late Activity _activity;
+  Activity _activity = Activity.Se;
   Activity get activity {
     return _activity;
   }

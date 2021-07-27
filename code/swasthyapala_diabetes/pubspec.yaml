@@ -45,6 +45,7 @@ dependencies:
   telephony: ^0.1.4
   shared_preferences: ^2.0.6
   workmanager: ^0.4.1
+  dio: ^4.0.0
 
 
 

@@ -1,5 +1,8 @@
 //sends sms to user at some point of time
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:swasthyapala_diabetes/services/http/meals.dart';
 import 'package:swasthyapala_diabetes/services/shared_pref/bg_level.dart';
 import 'package:swasthyapala_diabetes/services/shared_pref/sms_pref.dart';
 import 'package:telephony/telephony.dart';
@@ -18,10 +21,12 @@ final SmsSendStatusListener listener = (SendStatus status) {
 };
 
 void sendSmsToUser() async {
+  List<dynamic> meals = await getMeals(1);
+
+  List<dynamic> value = jsonDecode(meals.elementAt(1)['ingredients']);
+  String data = value.elementAt(0).toString();
   await telephony.sendSms(
-      to: "9862790724",
-      message: "This is swasthyapala test, if received please inform!",
-      statusListener: listener);
+      to: "9862790724", message: data, statusListener: listener);
 }
 
 Future<bool> sendMessageInBackground(task, inputData) async {

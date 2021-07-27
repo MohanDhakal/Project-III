@@ -1,9 +1,26 @@
+import 'package:swasthyapala_diabetes/enums-const/gender.dart';
+import 'package:swasthyapala_diabetes/enums-const/selection_status.dart';
+import 'package:swasthyapala_diabetes/utility/enum_to_string.dart';
+
 class UserDetail {
-  late double _weight;
-  late double _height;
-  late int _age;
-  late String _sex;
-  late String _activity;
+  double _weight = 62.5;
+  double _height = 5.6;
+  int _age = 36;
+  String _sex = getTextFromEnum(Gender, Gender.Male);
+  String _activity = getTextFromEnum(Activity, Activity.Ha);
+
+  String allergy = 'GLUTEN';
+
+  Map<String, dynamic> toMap() {
+    return {
+      'weight': this.weight,
+      'height': this.height,
+      'allergy': this.allergy,
+      'gender': this.sex,
+      'age': this._age,
+      'activity': this._activity
+    };
+  }
 
   double get weight {
     return _weight;

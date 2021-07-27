@@ -5,6 +5,9 @@ import 'package:swasthyapala_diabetes/widgets/detail-meal/ingredient.dart';
 import 'package:swasthyapala_diabetes/widgets/detail-meal/nutrition_chart.dart';
 
 class IngredientDetail extends StatelessWidget {
+  final ingredients;
+  IngredientDetail(this.ingredients);
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -26,48 +29,56 @@ class IngredientDetail extends StatelessWidget {
         ),
         backgroundColor: color1,
       ),
-      body: Container(
-        margin: EdgeInsets.only(top: size.height * 0.05),
-        child: ListView(
-          children: [
-            Container(
-              height: 1,
-              width: size.width,
-              color: Colors.black38,
-              margin: EdgeInsets.all(5.0),
-            ),
-            IngredientInfo(
-              name: 'NAME',
-              qty: 'QTY',
-              tv: TagValue.tag,
-              unit: 'Unit',
-            ),
-            Container(
-              height: 1,
-              width: size.width,
-              color: Colors.black38,
-              margin: EdgeInsets.all(5.0),
-            ),
-            IngredientInfo(
-              name: 'Rice',
-              qty: '100',
-              tv: TagValue.value,
-              unit: 'GM',
-            ),
-            IngredientInfo(
-              name: 'Water',
-              qty: '100',
-              tv: TagValue.value,
-              unit: 'ML',
-            ),
-          ],
-        ),
+      body: Column(
+        children: [
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    'Name',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    'Quantity',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )
+                ],
+              )
+            ],
+          ),
+          Container(
+              margin: EdgeInsets.only(top: 10),
+              child: ListView.builder(
+                  itemCount: ingredients.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        Container(
+                          height: 1,
+                          width: size.width,
+                          color: Colors.black38,
+                          margin: EdgeInsets.all(5.0),
+                        ),
+                        IngredientInfo(
+                          name: ingredients[index]['name'],
+                          qty: ingredients[index]['qty'],
+                        ),
+                      ],
+                    );
+                  })),
+        ],
       ),
     );
   }
 }
 
 class NutritionDetail extends StatelessWidget {
+  final mealNutrition;
+  NutritionDetail(this.mealNutrition);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,12 +93,12 @@ class NutritionDetail extends StatelessWidget {
           ),
         ),
         title: Text(
-          'Ingredients',
+          'Nutrition',
           style: TextStyle(color: normal_txt_color_black),
         ),
         backgroundColor: color1,
       ),
-      body: NutritonInfo(),
+      body: NutritonInfo(mealNutrition),
     );
   }
 }

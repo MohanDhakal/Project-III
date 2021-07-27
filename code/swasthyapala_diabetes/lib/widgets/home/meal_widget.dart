@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:swasthyapala_diabetes/enums-const/colors.dart';
 import 'package:swasthyapala_diabetes/enums-const/sizes.dart';
 import 'package:swasthyapala_diabetes/screens/meal_explore.dart';
+import 'package:swasthyapala_diabetes/services/http/meals.dart';
 import 'package:swasthyapala_diabetes/utility/shadow.dart';
 import 'package:swasthyapala_diabetes/utility/text_btn_spec.dart';
 
 class MealWidget extends StatelessWidget {
   final mealName, time, mealType;
-
-  MealWidget({required this.mealName,required this.time,required this.mealType});
+  final meal;
+  MealWidget(
+      {required this.mealName, required this.time, this.meal, this.mealType});
 
   @override
   Widget build(BuildContext context) {
@@ -83,10 +85,13 @@ class MealWidget extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 8.0),
                       child: TextButton(
                           onPressed: () {
+                            // getMeals(1);
+                            print(meal['ingredients']);
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => MealDetail()));
+                                    builder: (context) =>
+                                        MealDetail(meal: meal)));
                           },
                           child: Text('View Detail',
                               style: TextStyle(fontSize: normal_text_size)),

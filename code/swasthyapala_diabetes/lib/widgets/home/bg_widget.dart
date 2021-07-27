@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swasthyapala_diabetes/enums-const/colors.dart';
+import 'package:swasthyapala_diabetes/services/http/bg.dart';
 import 'package:swasthyapala_diabetes/services/shared_pref/bg_level.dart';
 
 class BGWidget extends StatefulWidget {
@@ -59,15 +60,17 @@ class _BGWidgetState extends State<BGWidget> {
                   actions: [
                     TextButton(
                         onPressed: () {
-                          DateTime dt = DateTime.now();
-                          final date = dt.year.toString() +
-                              '/' +
-                              dt.month.toString() +
-                              '/' +
-                              dt.day.toString();
-                          // print(date);
-                          print(currenBG);
+                          // DateTime dt = DateTime.now();
+                          // final date = dt.year.toString() +
+                          //     '/' +
+                          //     dt.month.toString() +
+                          //     '/' +
+                          //     dt.day.toString();
+                          // // print(date);
+                          // print(currenBG);
+
                           addBgValue(int.parse(myController.text));
+                          sendBgValueToServer(int.parse(myController.text));
                           setState(() {
                             currenBG = int.parse(myController.text);
                           });

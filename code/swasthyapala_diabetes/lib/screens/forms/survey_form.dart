@@ -130,7 +130,7 @@ class SurveyForm extends StatelessWidget {
                   placeholder: Gender.Male,
                   title: Gender,
                   shadow:
-                      (value.gender == Gender.Male ? showInnerShadow() : null),
+                      value.gender == Gender.Male ? showInnerShadow() : null,
                 ),
               ),
               Padding(
@@ -138,9 +138,8 @@ class SurveyForm extends StatelessWidget {
                 child: CustomSelectionBtn(
                   placeholder: Gender.Female,
                   title: Gender,
-                  shadow: (value.gender == Gender.Female
-                      ? showInnerShadow()
-                      : null),
+                  shadow:
+                      value.gender == Gender.Female ? showInnerShadow() : null,
                 ),
               ),
               Padding(
@@ -149,7 +148,7 @@ class SurveyForm extends StatelessWidget {
                   placeholder: Gender.Other,
                   title: Gender,
                   shadow:
-                      (value.gender == Gender.Other ? showInnerShadow() : null),
+                      value.gender == Gender.Female ? showInnerShadow() : null,
                 ),
               ),
             ],

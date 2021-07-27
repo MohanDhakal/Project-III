@@ -5,20 +5,20 @@ String getTextFromEnum(title, value) {
   if (title == Gender) {
     switch (value) {
       case Gender.Male:
-        return 'Male';
+        return 'MALE';
       case Gender.Female:
-        return 'Female';
+        return 'FEMALE';
       default:
-        return 'Others';
+        return 'OTHERS';
     }
   } else if (title == Activity) {
     switch (value) {
       case Activity.Ha:
-        return 'Active';
+        return 'ACTIVE';
       case Activity.Mo:
-        return 'Moderate';
+        return 'MODERATE';
       default:
-        return 'Sedentary';
+        return 'SEDENTARY';
     }
   } else
     return 'N/A';
