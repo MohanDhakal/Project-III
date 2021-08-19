@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:swasthyapala_diabetes/enums-const/colors.dart';
 import 'package:swasthyapala_diabetes/enums-const/gender.dart';
 import 'package:swasthyapala_diabetes/enums-const/selection_status.dart';
-import 'package:swasthyapala_diabetes/states/ActivitySelection.dart';
-import 'package:swasthyapala_diabetes/states/SexSelection.dart';
+import 'package:swasthyapala_diabetes/states/activity_selection_bloc.dart';
+import 'package:swasthyapala_diabetes/states/sex_selection_bloc.dart';
 import 'package:swasthyapala_diabetes/utility/enum_to_string.dart';
 
 class CustomSelectionBtn extends StatelessWidget {

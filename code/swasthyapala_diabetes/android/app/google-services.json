@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "919971131736",
+    "project_id": "swasthyapala",
+    "storage_bucket": "swasthyapala.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:919971131736:android:74578c5a477ffe809eb52d",
+        "android_client_info": {
+          "package_name": "com.example.swasthyapala_diabetes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "919971131736-722l4a7fjsgimfqa0smhp962jvn570ek.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCq_3J0V0HMQI5SPEA8sD44sE99ddJ8WY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "919971131736-722l4a7fjsgimfqa0smhp962jvn570ek.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

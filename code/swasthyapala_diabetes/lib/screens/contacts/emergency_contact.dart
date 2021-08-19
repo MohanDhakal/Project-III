@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:swasthyapala_diabetes/enums-const/status.dart';
 import 'package:swasthyapala_diabetes/models/contacts.dart';
 import 'package:swasthyapala_diabetes/services/db_storage/user_contact.dart';
-import 'package:swasthyapala_diabetes/states/contacts.dart';
+import 'package:swasthyapala_diabetes/states/contacts_bloc.dart';
 import 'package:swasthyapala_diabetes/utility/permission_services.dart';
 import 'package:swasthyapala_diabetes/widgets/contact/emer_contact.dart';
 
@@ -40,14 +40,14 @@ class _ContactsState extends State<Contacts> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(Icons.arrow_back_ios),
-        title: Text('Emergency Contacts'),
+        title: Text("Your Closest"),
       ),
       body: Container(
         margin: EdgeInsets.only(top: 50),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+
             Container(
               child: Text('Add new Contact'),
             ),

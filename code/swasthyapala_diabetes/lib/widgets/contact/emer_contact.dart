@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swasthyapala_diabetes/models/contacts.dart';
 import 'package:swasthyapala_diabetes/screens/contacts/contact_authorization.dart';
-import 'package:swasthyapala_diabetes/states/contacts.dart';
+import 'package:swasthyapala_diabetes/states/contacts_bloc.dart';
 
 class EmergencyContactUI extends StatelessWidget {
   final EmergencyContact ct;

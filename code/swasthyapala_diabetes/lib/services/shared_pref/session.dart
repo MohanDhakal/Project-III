@@ -1,20 +1,22 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-void addSession(String name, String phoneNumber) async {
+void addSession(String name, String phoneNumber, int userId) async {
   final prefs = await SharedPreferences.getInstance();
   prefs.setString("name", name);
   prefs.setString("phone", phoneNumber);
+  prefs.setInt('userId', userId);
   print('session stored');
 }
 
-Future<String> getSession() async {
+Future<List<String>> getSessionPhoneAndName() async {
   final prefs = await SharedPreferences.getInstance();
-  String bg = prefs.getString('phone') ?? "N/A";
-  return bg;
+  String phone = prefs.getString('phone') ?? "N/A";
+  String name = prefs.getString('name') ?? "N/A";
+  return [phone, name];
 }
 
-Future<String> getNameFromSession() async {
+Future<int> getID() async{
   final prefs = await SharedPreferences.getInstance();
-  String bg = prefs.getString('name') ?? "ABCD";
-  return bg;
+  int userId = prefs.getInt('userId') ?? 1;
+  return userId;
 }

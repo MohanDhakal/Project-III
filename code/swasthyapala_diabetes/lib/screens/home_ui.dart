@@ -1,13 +1,19 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:swasthyapala_diabetes/enums-const/colors.dart';
+import 'package:swasthyapala_diabetes/enums-const/paths.dart';
 import 'package:swasthyapala_diabetes/enums-const/sizes.dart';
+import 'package:swasthyapala_diabetes/middleware/serve_meal.dart';
+import 'package:swasthyapala_diabetes/models/warning.dart';
 import 'package:swasthyapala_diabetes/screens/contacts/emergency_contact.dart';
 import 'package:swasthyapala_diabetes/screens/forms/user_form.dart';
 import 'package:swasthyapala_diabetes/screens/profile.dart';
-import 'package:swasthyapala_diabetes/services/http/meals.dart';
-import 'package:swasthyapala_diabetes/services/notification/notification_service.dart';
+import 'package:swasthyapala_diabetes/screens/test/push_notification_test.dart';
+import 'package:swasthyapala_diabetes/screens/warning_list.dart';
+import 'package:swasthyapala_diabetes/services/db_storage/messages.dart';
 import 'package:swasthyapala_diabetes/services/shared_pref/session.dart';
-import 'package:swasthyapala_diabetes/utility/setup_timezone.dart';
 import '../widgets/home/bg_widget.dart';
 import '../widgets/home/meal_widget.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -23,28 +29,52 @@ class _HomeUIState extends State<HomeUI> {
   bool isLoggedin = false;
   String name = "ABCD";
   List<dynamic> mealList = [];
+
+//for firebase notification system
+
+  late final FirebaseMessaging _messaging;
+
   @override
   void initState() {
-    super.initState();
+    //display notiication when the app is in foreground
+    registerNotification();
 
-    //make api call to fetch the meal list
-    getMeals(1).then((value) {
-      setState(() {
-        mealList = value;
+    //get meal from the middleware by getting id from shared pref
+    getID().then((value) {
+      getMealToday(value).then((value) {
+        setState(() {
+          mealList = value;
+        });
       });
     });
-    getSession().then((value) {
-      if (value.length >= 10) {
+
+    //check if the user already exists in the session
+    getSessionPhoneAndName().then((value) {
+      //if phone number is valid, it exists
+      if (value[0].length >= 10) {
         setState(() {
           isLoggedin = true;
+          name = value[1];
         });
       }
     });
-    getNameFromSession().then((value) {
-      setState(() {
-        name = value;
-      });
+
+    // For handling notification when the app is in background
+    // but not terminated
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      WarningMessage notification = WarningMessage(
+        message.notification?.title,
+        message.notification?.body,
+      );
+
+      //add the notification to the database
+      addNotificationMessage(notification);
     });
+
+    //when the app is in terminated state
+    checkForInitialMessage();
+    super.initState();
+
     //notification service setup
     // initializationiSetup();
     // configureTimeZone();
@@ -66,18 +96,22 @@ class _HomeUIState extends State<HomeUI> {
                 BottomNavigationBarItem(
                   icon: Icon(
                     Icons.home,
-                    color: Colors.red,
+                    color: color1,
                   ),
                   label: "Home",
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.person, color: Colors.red),
+                  icon: Icon(Icons.person, color: color1),
                   label: "Profile",
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.group, color: Colors.red),
+                  icon: Icon(Icons.group, color: color1),
                   label: "Friends",
-                )
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.notification_important, color: color1),
+                  label: "Messages",
+                ),
               ],
               onTap: (num) {
                 setState(() {
@@ -87,112 +121,201 @@ class _HomeUIState extends State<HomeUI> {
             ),
             body: Container(
               child: _currentTabIndex == 1
-                  ? UserProfile()
+                  ? UserProfile(name)
                   : _currentTabIndex == 2
                       ? Contacts()
-                      : SingleChildScrollView(
-                          child: Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                      : _currentTabIndex == 3
+                          ? WarningList()
+                          : SingleChildScrollView(
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      width: 100,
-                                      margin:
-                                          EdgeInsets.only(top: 20, left: 10),
-                                      child: RichText(
-                                          text: TextSpan(children: [
-                                        TextSpan(
-                                            text: '\t\tHello\n',
-                                            style: TextStyle(
-                                                fontSize: 24,
-                                                color: Colors.black)),
-                                        TextSpan(
-                                            text: '\t\t $name',
-                                            style: TextStyle(
-                                                fontSize: big_text_size,
-                                                fontWeight: FontWeight.bold,
-                                                color: color1)),
-                                      ])),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          width: 100,
+                                          margin: EdgeInsets.only(
+                                              top: 20, left: 10),
+                                          child: RichText(
+                                              text: TextSpan(children: [
+                                            TextSpan(
+                                                text: '\tHello\n',
+                                                style: TextStyle(
+                                                    fontSize: 24,
+                                                    color: Colors.black)),
+                                            TextSpan(
+                                                text: '\t\t $name',
+                                                style: TextStyle(
+                                                    fontSize: big_text_size,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: color1)),
+                                          ])),
+                                        ),
+                                        BGWidget(),
+                                      ],
                                     ),
-                                    BGWidget(),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 10.0, left: 10),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        height: size.height * 0.30,
-                                        child: Image.asset(
-                                            'asset/images/nutritionist.png'),
-                                      ),
-                                      Container(
-                                        width: size.width * 0.3,
-                                        margin:
-                                            EdgeInsets.only(left: 5, right: 5),
-                                        child: AnimatedTextKit(
-                                          pause: Duration(seconds: 2),
-                                          animatedTexts: [
-                                            TypewriterAnimatedText(
-                                                "Let's get started with your breakfast",
-                                                textAlign: TextAlign.center,
-                                                textStyle: TextStyle(
-                                                  fontSize: medium_text_size,
-                                                ),
-                                                speed: Duration(
-                                                    milliseconds: 100)),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                (mealList.length < 1)
-                                    ? Text('No Meal Available')
-                                    : CarouselSlider(
-                                        options: CarouselOptions(
-                                          height: size.height * 0.25,
-                                          initialPage: 0,
-                                        ),
-                                        items: [
-                                          MealWidget(
-                                            time: '07:30 AM',
-                                            mealType: 'Breakfast',
-                                            mealName:
-                                                mealList.elementAt(0)['name'] ??
-                                                    'N/A',
-                                            meal: mealList.elementAt(0) ?? null,
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 10.0, left: 10),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            height: size.height * 0.30,
+                                            child: Image.asset(
+                                                '$assetImage/nutritionist.png'),
                                           ),
-                                          MealWidget(
-                                            time: '10:30 AM',
-                                            mealType: 'Lunch',
-                                            mealName:
-                                                mealList.elementAt(1)['name'] ??
-                                                    'NA',
-                                            meal: mealList.elementAt(1) ?? null,
-                                          ),
-                                          MealWidget(
-                                            time: '6:30 PM',
-                                            mealType: 'Dinner',
-                                            mealName:
-                                                mealList.elementAt(2)['name'] ??
-                                                    'N/A',
-                                            meal: mealList.elementAt(2) ?? null,
+                                          Container(
+                                            width: size.width * 0.3,
+                                            margin: EdgeInsets.only(
+                                                left: 5, right: 5),
+                                            child: AnimatedTextKit(
+                                              pause: Duration(seconds: 2),
+                                              animatedTexts: [
+                                                TypewriterAnimatedText(
+                                                    "It is time for some\t${getMealType()}",
+                                                    textAlign: TextAlign.center,
+                                                    textStyle: TextStyle(
+                                                      fontSize:
+                                                          medium_text_size,
+                                                    ),
+                                                    speed: Duration(
+                                                        milliseconds: 100)),
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
-                              ],
+                                    ),
+                                    (mealList.length < 3)
+                                        ? Center(
+                                            child: SizedBox(
+                                              height: 100,
+                                              width: 100,
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
+                                          )
+                                        : CarouselSlider(
+                                            options: CarouselOptions(
+                                              height: size.height * 0.25,
+                                              initialPage: 0,
+                                            ),
+                                            items: [
+                                              MealWidget(
+                                                time: '07:30 AM',
+                                                mealType: 'Breakfast',
+                                                mealName: mealList
+                                                        .elementAt(0)['name'] ??
+                                                    'N/A',
+                                                meal: mealList.elementAt(0) ??
+                                                    null,
+                                              ),
+                                              MealWidget(
+                                                time: '10:30 AM',
+                                                mealType: 'Lunch',
+                                                mealName: mealList
+                                                        .elementAt(1)['name'] ??
+                                                    'NA',
+                                                meal: mealList.elementAt(1) ??
+                                                    null,
+                                              ),
+                                              MealWidget(
+                                                time: '6:30 PM',
+                                                mealType: 'Dinner',
+                                                mealName: mealList
+                                                        .elementAt(2)['name'] ??
+                                                    'N/A',
+                                                meal: mealList.elementAt(2) ??
+                                                    null,
+                                              ),
+                                            ],
+                                          ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
             ));
+  }
+
+  String getMealType() {
+    int time = DateTime.now().hour;
+    print(time);
+    if (time <= 9) {
+      return 'Breakfast';
+    } else if (time >= 9 && time <= 12) {
+      return 'Lunch';
+    } else if (time >= 12 && time <= 18) {
+      return 'Snacks';
+    } else if (time >= 18 && time <= 22) {
+      return 'Dinner';
+    }
+    return 'Breakfast';
+  }
+
+  //registering notification that is coming from the firebase cloud messaging service
+  void registerNotification() async {
+    // 1. Initialize the Firebase app
+    await Firebase.initializeApp();
+
+    // 2. Instantiate Firebase Messaging
+    _messaging = FirebaseMessaging.instance;
+
+    // 3. On iOS, this helps to take the user permissions
+    NotificationSettings settings = await _messaging.requestPermission(
+      alert: true,
+      badge: true,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+      // For handling the received notifications
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        // Parse the message received
+        WarningMessage notification = WarningMessage(
+          message.notification?.title,
+          message.notification?.body,
+        );
+        // For displaying the notification as an overlay
+        showSimpleNotification(
+          Text(notification.title),
+          subtitle: Text(notification.content),
+          background: Colors.cyan.shade700,
+          duration: Duration(seconds: 2),
+        );
+
+        //add the notification to the database
+        addNotificationMessage(notification);
+      });
+    } else {
+      print('User declined or has not accepted permission');
+    }
+    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
+
+  // For handling notification when the app is in terminated state
+
+  checkForInitialMessage() async {
+    await Firebase.initializeApp();
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    if (initialMessage != null) {
+      WarningMessage notification = WarningMessage(
+        initialMessage.notification?.title,
+        initialMessage.notification?.body,
+      );
+      //add the notification to the database
+      addNotificationMessage(notification);
+    }
   }
 }

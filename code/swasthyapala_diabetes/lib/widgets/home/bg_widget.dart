@@ -60,15 +60,6 @@ class _BGWidgetState extends State<BGWidget> {
                   actions: [
                     TextButton(
                         onPressed: () {
-                          // DateTime dt = DateTime.now();
-                          // final date = dt.year.toString() +
-                          //     '/' +
-                          //     dt.month.toString() +
-                          //     '/' +
-                          //     dt.day.toString();
-                          // // print(date);
-                          // print(currenBG);
-
                           addBgValue(int.parse(myController.text));
                           sendBgValueToServer(int.parse(myController.text));
                           setState(() {

@@ -1,9 +1,8 @@
-1. Run background services to add apis at some other time.LP
-2. add state management for emergency contacts --done
-3. Build the user profile--(UI almost done)
-4. Send warnings to select1ed emergency contacts (send message to the mobile phone)(HP2)
-5. Differentiate user to send emergency information or meal information.--done
-6. Send notification of the warning or the meal time to the user.--need to do with real meal data
-7. handle on click of the notification.--Lp1
-8. resolve error of flutter contact picker.--hp1
-9. replace coverflow with other library(not compatible with null safety)--done with carousel
+1. checking internet connectivity before making any network call otherwise show no internet or connect to the internet error.--done
+2. check if the application works for login,signup properly
+3. also check if the firebase messaging services works perfectly
+4. Check if the profiles are right
+5. check if the firebase notifications are properly stored in the database
+6. add some validation logic(at least write and put into middleware section)
+7. make application in flow and make a small demo video
+8. push to github

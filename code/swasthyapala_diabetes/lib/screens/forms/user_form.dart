@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:swasthyapala_diabetes/enums-const/colors.dart';
+import 'package:swasthyapala_diabetes/enums-const/paths.dart';
 import 'package:swasthyapala_diabetes/enums-const/sizes.dart';
 import 'package:swasthyapala_diabetes/screens/forms/survey_form.dart';
-import 'package:swasthyapala_diabetes/screens/home_ui.dart';
 import 'package:swasthyapala_diabetes/services/http/user.dart';
 import 'package:swasthyapala_diabetes/services/shared_pref/session.dart';
+import 'package:swasthyapala_diabetes/utility/internet.dart';
+import 'package:swasthyapala_diabetes/widgets/util/no_internet.dart';
 
 class UserForm extends StatefulWidget {
   @override
@@ -17,6 +19,8 @@ class _UserFormState extends State<UserForm> {
   final myPhoneController = new TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+
+  bool isConnectedToInternet = true;
 
   @override
   Widget build(BuildContext context) {
@@ -33,27 +37,29 @@ class _UserFormState extends State<UserForm> {
                   Padding(
                     padding: const EdgeInsets.only(top: 50.0, bottom: 50.0),
                     child: SizedBox(
-                      height: size.height * 0.3,
-                      child: Image.asset('asset/images/nutritionist.png'),
+                      height: size.height * 0.2,
+                      child: Image.asset('$assetImage/nutritionist.png'),
                     ),
                   ),
-                  Expanded(
-                      child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 10,
-                      left: 8.0,
-                    ),
-                    child: RichText(
-                      textAlign: TextAlign.start,
-                      text: TextSpan(
-                        text: "Let's \nRegister \nFirst",
-                        style: TextStyle(
-                            color: normal_txt_color_black,
-                            fontSize: big_text_size,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  )),
+                  !isConnectedToInternet
+                      ? NoInternet()
+                      : Expanded(
+                          child: Padding(
+                          padding: const EdgeInsets.only(
+                            top: 10,
+                            left: 8.0,
+                          ),
+                          child: RichText(
+                            textAlign: TextAlign.start,
+                            text: TextSpan(
+                              text: "Let's \nRegister \nFirst",
+                              style: TextStyle(
+                                  color: normal_txt_color_black,
+                                  fontSize: big_text_size,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        )),
                 ],
               ),
               Padding(
@@ -117,15 +123,39 @@ class _UserFormState extends State<UserForm> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    //SEND USER TO SERVER
-                    addUser(myNameController.text, myPhoneController.text);
+                    isConnectionReady().then((value) {
+                      if (value == true) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CircularProgressIndicator();
+                            });
 
-                    //ADD TO SEESSION
-                    addSession(myNameController.text, myPhoneController.text);
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (_) => SurveyForm()));
-                    // print(myNameController.text);
-                    // print(myPhoneController.text);
+                        //SEND USER TO SERVER
+                        int userId;
+                        getUser(myPhoneController.text).then((value) {
+                          //if the user doesn't already exists
+                          //todo: handle if the user already exists
+                          if (value == false) {
+                            addUser(myNameController.text,
+                                    myPhoneController.text)
+                                .then((value) {
+                              userId = value;
+                              //ADD TO SEESSION
+                              addSession(myNameController.text,
+                                  myPhoneController.text, userId);
+                            });
+                          }
+                        });
+                        //TO THE NEXT SCREEN
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => SurveyForm()));
+                      } else {
+                        setState(() {
+                          isConnectedToInternet = false;
+                        });
+                      }
+                    });
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Form not validate')));
@@ -150,7 +180,7 @@ class _UserFormState extends State<UserForm> {
                     side: BorderSide(color: Colors.black38),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

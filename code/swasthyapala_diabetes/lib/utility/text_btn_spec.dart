@@ -13,7 +13,7 @@ Color getColor(Set<MaterialState> states) {
   if (states.any(interactiveStates.contains)) {
     return color4;
   }
-  return color1;
+  return color10;
 }
 
 double getElevation(Set<MaterialState> states) {
