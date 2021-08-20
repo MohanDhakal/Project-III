@@ -34,10 +34,21 @@ Route::post('login',[UserController::class,'index']);
 
 Route::post('/addPatient',[PatientController::class,'addPatient']);
 Route::get('/getPatient',[PatientController::class,'getPatient']);
+
+
 Route::post('/addProfile',[ProfileController::class,'addProfile']);
+Route::get('/getProfile',[ProfileController::class,'getProfile']);
+Route::put('/updateAge',[ProfileController::class,'updateAge']);
+Route::put('/updateHeight',[ProfileController::class,'updateHeight']);
+Route::put('/updateWeight',[ProfileController::class,'updateWeight']);
+Route::put('/updateActivity',[ProfileController::class,'updateActivity']);
+
+
+
+
 Route::post('/addBg',[BgController::class,'addBg']);
 Route::post('/addMeal',[MealController::class,'addMeal']);
 
-//send user id as it is.
+//send user id as query parameters.
 Route::get('/getMeal',[MealController::class,'getMeal']);
 

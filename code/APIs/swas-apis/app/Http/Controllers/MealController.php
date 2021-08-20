@@ -37,11 +37,13 @@ class MealController extends Controller
             $meal->ingredients=json_encode($value['ingredients']);
             $meal->save();
         }        
-        return   ['response'=>'okay']; 
+        return  $meals; 
     }
+
     public function getMeal(Request $request){
         $userId=$request->userId;
-        $meals = Meal::where('userId',$userId)->orderBy('created_at','desc')->take(3)->get();
-        return json_encode($meals,JSON_UNESCAPED_SLASHES);
+        $meals = Meal::where('userId',$userId)->orderBy('created_at','desc')->take(3)->get(); 
+        return json_encode($meals);
     }
+      
 }

@@ -28,4 +28,62 @@ class ProfileController extends Controller
         $user = DB::table('profiles')->where('userId', $userId)->first();
         return json_encode($user);
     }
+    
+    public function updateActivity(Request $request){
+        $userId=$request->userId;
+        $activity=$request->activity;
+ 
+        $profile = Profile::find($userId);
+        $profile->activity =$activity;
+        $profile->save();
+        if($profile)
+        return ['status'=>'sucess'];
+        else
+        return ['status'=>'failure'];
+
+
+    }
+    public function updateHeight(Request $request){
+        $userId=$request->userId;
+        $height=$request->height;
+
+        $profile = Profile::find($userId);
+        $profile->height =$height;
+        $profile->save();
+
+        if($profile)
+        return ['status'=>'sucess'];
+        else
+        return ['status'=>'failure'];
+
+    }
+    public function updateWeight(Request $request){
+        $userId=$request->userId;
+        $weight=$request->weight;
+
+        $profile = Profile::find($userId);
+        $profile->weight =$weight;
+        $profile->save();
+
+        if($profile)
+        return ['status'=>'sucess'];
+        else
+        return ['status'=>'failure'];
+
+
+    }
+    public function updateAge(Request $request){
+        $userId=$request->userId;
+        $age=$request->age;
+
+        $profile=Profile::find($userId);
+        $profile->age=$age;
+        $profile->save();
+
+        if($profile)
+        return ['status'=>'sucess'];
+        else
+        return ['status'=>'failure'];
+
+    }
 }
