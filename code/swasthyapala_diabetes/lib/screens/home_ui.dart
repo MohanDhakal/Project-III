@@ -3,17 +3,19 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:swasthyapala_diabetes/enums-const/colors.dart';
+import 'package:swasthyapala_diabetes/enums-const/meal.dart';
 import 'package:swasthyapala_diabetes/enums-const/paths.dart';
 import 'package:swasthyapala_diabetes/enums-const/sizes.dart';
-import 'package:swasthyapala_diabetes/middleware/serve_meal.dart';
+import 'package:swasthyapala_diabetes/services/shared_pref/serve_meal.dart';
 import 'package:swasthyapala_diabetes/models/warning.dart';
 import 'package:swasthyapala_diabetes/screens/contacts/emergency_contact.dart';
 import 'package:swasthyapala_diabetes/screens/forms/user_form.dart';
 import 'package:swasthyapala_diabetes/screens/profile.dart';
-import 'package:swasthyapala_diabetes/screens/test/push_notification_test.dart';
 import 'package:swasthyapala_diabetes/screens/warning_list.dart';
 import 'package:swasthyapala_diabetes/services/db_storage/messages.dart';
+import 'package:swasthyapala_diabetes/services/notification/notification_service.dart';
 import 'package:swasthyapala_diabetes/services/shared_pref/session.dart';
+import 'package:swasthyapala_diabetes/utility/setup_timezone.dart';
 import '../widgets/home/bg_widget.dart';
 import '../widgets/home/meal_widget.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -36,7 +38,7 @@ class _HomeUIState extends State<HomeUI> {
 
   @override
   void initState() {
-    //display notiication when the app is in foreground
+    //display firebase notiication when the app is in foreground
     registerNotification();
 
     //get meal from the middleware by getting id from shared pref
@@ -62,7 +64,7 @@ class _HomeUIState extends State<HomeUI> {
     // For handling notification when the app is in background
     // but not terminated
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      WarningMessage notification = WarningMessage(
+      WarningMessage notification = WarningMessage.instance(
         message.notification?.title,
         message.notification?.body,
       );
@@ -71,16 +73,34 @@ class _HomeUIState extends State<HomeUI> {
       addNotificationMessage(notification);
     });
 
-    //when the app is in terminated state
+    //when the app is in terminated state:firebase notifi
     checkForInitialMessage();
-    super.initState();
 
-    //notification service setup
-    // initializationiSetup();
-    // configureTimeZone();
-    // Future.delayed(Duration(seconds: 2), () {
-    //   scheduleMealFor(MealType.dinner);
-    // });
+    //local notification service setup
+    initializationSetup();
+    configureTimeZone();
+    //local notification scheduled for different time
+
+    Future.delayed(Duration(seconds: 2), () {
+      int hr = DateTime.now().hour;
+      switch (hr) {
+        case 7:
+          scheduleMealFor(MealType.breakfast);
+          break;
+        case 9:
+          scheduleMealFor(MealType.lunch);
+          break;
+        case 16:
+          scheduleMealFor(MealType.snacks);
+          break;
+        case 19:
+          scheduleMealFor(MealType.dinner);
+          break;
+        default:
+          break;
+      }
+    });
+    super.initState();
   }
 
   @override
@@ -281,10 +301,12 @@ class _HomeUIState extends State<HomeUI> {
       // For handling the received notifications
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         // Parse the message received
-        WarningMessage notification = WarningMessage(
+
+        WarningMessage notification = WarningMessage.instance(
           message.notification?.title,
           message.notification?.body,
         );
+
         // For displaying the notification as an overlay
         showSimpleNotification(
           Text(notification.title),
@@ -310,7 +332,7 @@ class _HomeUIState extends State<HomeUI> {
         await FirebaseMessaging.instance.getInitialMessage();
 
     if (initialMessage != null) {
-      WarningMessage notification = WarningMessage(
+      WarningMessage notification = WarningMessage.instance(
         initialMessage.notification?.title,
         initialMessage.notification?.body,
       );

@@ -1,8 +1,8 @@
 class WarningMessage {
   String? _title;
   String? _content;
-  WarningMessage(this._title, this._content);
-
+  WarningMessage();
+  WarningMessage.instance(this._title, this._content);
 
   String get title => _title!;
 
@@ -17,6 +17,12 @@ class WarningMessage {
       'content': _content
     };
     return map;
+  }
+
+  WarningMessage fromJson(Map<String, dynamic> elem) {
+    this.title = elem['title'];
+    this.content = elem['content'];
+    return this;
   }
 
   String get content => _content!;

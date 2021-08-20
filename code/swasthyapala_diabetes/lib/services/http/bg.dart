@@ -1,23 +1,21 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:swasthyapala_diabetes/services/shared_pref/session.dart';
+
+String baseUrl = "http://192.168.1.177:8000/api";
+
+BaseOptions options = new BaseOptions(
+    baseUrl: baseUrl,
+    receiveDataWhenStatusError: true,
+    connectTimeout: 30 * 1000, // 30 seconds
+    receiveTimeout: 30 * 1000 // 30 seconds
+    );
 
 void sendBgValueToServer(int value) async {
-  String baseUrl = "http://192.168.1.177:8000/api";
-
-  BaseOptions options = new BaseOptions(
-      baseUrl: baseUrl,
-      receiveDataWhenStatusError: true,
-      connectTimeout: 30 * 1000, // 30 seconds
-      receiveTimeout: 30 * 1000 // 30 seconds
-      );
-
-  var data = {'userId': 1};
+  int userId = await getID();
   try {
-    Response user = await Dio(options)
-        .get("/getPatient", queryParameters: {'phone': '9862790734'});
-    var id = json.decode(user.data)['id'];
-    Map<String, dynamic> map = {'userId': id, 'value': value};
+    Map<String, dynamic> map = {'userId': userId, 'value': value};
     Response response = await Dio(options).post("/addBg", data: map);
     print(response);
   } on DioError catch (ex) {

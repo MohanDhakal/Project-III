@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:swasthyapala_diabetes/services/http/meals.dart';
 import 'package:swasthyapala_diabetes/services/shared_pref/meal_today.dart';
 
-//gets the meals store in the sharedpreferences
+//gets the meals and store in the sharedpreferences
 Future<List> getMealToday(id) async {
   String meals = await getMeal();
   List ml = json.decode(meals);

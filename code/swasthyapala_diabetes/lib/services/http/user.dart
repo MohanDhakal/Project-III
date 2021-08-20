@@ -14,8 +14,7 @@ Future<int> addUser(String name, String phone) async {
   try {
     Response response = await Dio(options)
         .post("/addPatient", data: {'name': name, 'phone': phone});
-    var user = json.decode(response.data);
-    userId=user['id'];
+    userId=response.data['id'];
   } on DioError catch (ex) {
     if (ex.type == DioErrorType.connectTimeout) {
       throw Exception("Connection  Timeout Exception");

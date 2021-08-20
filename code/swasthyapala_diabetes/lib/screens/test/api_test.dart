@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swasthyapala_diabetes/enums-const/colors.dart';
-import 'package:swasthyapala_diabetes/middleware/serve_meal.dart';
+import 'package:swasthyapala_diabetes/services/shared_pref/serve_meal.dart';
 
 class ApiTest extends StatefulWidget {
   @override

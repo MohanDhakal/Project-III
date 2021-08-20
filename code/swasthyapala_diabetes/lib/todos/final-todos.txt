@@ -1,8 +1,9 @@
 1. checking internet connectivity before making any network call otherwise show no internet or connect to the internet error.--done
-2. check if the application works for login,signup properly
+2. check if the application works for login,signup properly-- signup/login in same ui
 3. also check if the firebase messaging services works perfectly
-4. Check if the profiles are right
-5. check if the firebase notifications are properly stored in the database
+4. Check if the profiles are right--done
+5. check if the firebase notifications are properly stored in the database--done
 6. add some validation logic(at least write and put into middleware section)
+6.1 messaging service(previously done on button click), local notification (scheduled)--done
 7. make application in flow and make a small demo video
-8. push to github
+8. push to github with the good readme(github has removed password authentication)

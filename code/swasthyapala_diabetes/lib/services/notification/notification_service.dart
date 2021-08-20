@@ -15,7 +15,7 @@ displayNofitication(message) async {
       payload: message.payload);
 }
 
-initializationiSetup() {
+initializationSetup() {
   fLNP = FlutterLocalNotificationsPlugin();
   var android = new AndroidInitializationSettings('@mipmap/ic_launcher');
   var iOS = new IOSInitializationSettings();
@@ -52,13 +52,15 @@ Future<void> scheduleMealFor(MealType meal) async {
       await scheduleNotificationAtHrMin(hour: 7, min: 0);
       break;
     case MealType.lunch:
-     await scheduleNotificationAtHrMin(hour: 10, min: 30);
+     await scheduleNotificationAtHrMin(hour: 9, min: 15);
       break;
     case MealType.dinner:
       await scheduleNotificationAtHrMin(hour: 19, min: 30);
       break;
     case MealType.snacks:
-      await scheduleNotificationAtHrMin(hour: 15, min: 00);
+      await scheduleNotificationAtHrMin(hour: 16, min: 0);
+      break;
+    default:
       break;
   }
 }
